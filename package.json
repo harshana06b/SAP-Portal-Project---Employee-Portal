@@ -1,0 +1,17 @@
+{
+  "name": "employeeportal-workspace",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "install:frontend": "npm install --prefix frontend",
+    "start:frontend": "npm start --prefix frontend",
+    "build:frontend": "npm run build --prefix frontend",
+    "install:backend": "npm install --prefix backend",
+    "start:backend": "npm start --prefix backend",
+    "dev:backend": "npm run dev --prefix backend"
+  },
+  "workspaces": [
+    "backend",
+    "frontend"
+  ]
+}

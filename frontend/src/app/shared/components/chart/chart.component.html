@@ -1,0 +1,18 @@
+<mat-card class="chart-card">
+  <div class="chart-card__header">
+    <div>
+      <h3>{{ title() }}</h3>
+      @if (subtitle()) {
+        <p>{{ subtitle() }}</p>
+      }
+    </div>
+  </div>
+
+  @if (hasData) {
+    <div class="chart-card__canvas">
+      <canvas baseChart [type]="type()" [data]="data()" [options]="options()"></canvas>
+    </div>
+  } @else {
+    <div class="chart-card__empty">{{ emptyMessage() }}</div>
+  }
+</mat-card>

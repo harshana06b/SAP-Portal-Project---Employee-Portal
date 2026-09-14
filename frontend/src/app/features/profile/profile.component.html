@@ -1,0 +1,53 @@
+<section class="page-grid">
+  <header class="page-header">
+    <h2>Employee profile</h2>
+    <p>View the SAP employee details available for your account.</p>
+  </header>
+
+  @if (profile(); as employee) {
+    <mat-card class="profile-card profile-card--hero">
+      <div class="profile-hero">
+        <div class="profile-hero__identity">
+          <span class="eyebrow">Employee overview</span>
+          <h3>{{ employee.fullName || 'Employee Profile' }}</h3>
+          <p>{{ employee.position || 'Position not assigned' }}</p>
+        </div>
+
+        <div class="profile-hero__pill-group">
+          <span class="profile-pill">ID {{ formatPersonnelNumber(employee.pernr) }}</span>
+          <span class="profile-pill">{{ employee.companyCode || 'Company code not assigned' }}</span>
+        </div>
+      </div>
+    </mat-card>
+
+    <div class="kpi-grid">
+      <app-kpi-card title="Employee ID" [value]="formatPersonnelNumber(employee.pernr)" subtitle="Personnel number"
+        icon="badge" />
+      <app-kpi-card title="Position" [value]="employee.position || 'Not assigned'" subtitle="Designation"
+        icon="work" />
+      <app-kpi-card title="Personnel Area" [value]="employee.location || 'Not assigned'" subtitle="SAP personnel area"
+        icon="place" accent="neutral" />
+    </div>
+
+    <mat-card class="profile-card">
+      <div class="section-heading">
+        <h3>Employee details</h3>
+        <p>Only the fields returned by your SAP profile service are shown here.</p>
+      </div>
+
+      <div class="profile-meta">
+        @for (item of detailItems(employee); track item.label) {
+          <div class="detail-tile">
+            <span>{{ item.label }}</span>
+            <strong>{{ item.value }}</strong>
+          </div>
+        }
+      </div>
+    </mat-card>
+  } @else {
+    <mat-card class="profile-card profile-card--empty">
+      <h3>Profile unavailable</h3>
+      <p>Your employee details could not be loaded right now.</p>
+    </mat-card>
+  }
+</section>

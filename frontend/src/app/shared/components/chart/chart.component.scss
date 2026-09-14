@@ -1,0 +1,41 @@
+.chart-card {
+  padding: 1.4rem;
+  border-radius: 24px;
+  background: var(--surface-glass);
+  border: 1px solid var(--border-soft);
+  backdrop-filter: blur(18px);
+  box-shadow: var(--shadow-soft);
+  transition: transform 240ms ease, box-shadow 240ms ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-strong);
+  }
+}
+
+.chart-card__header {
+  margin-bottom: 1.15rem;
+
+  h3 {
+    margin: 0;
+    font-size: 1.05rem;
+  }
+
+  p {
+    margin: 0.4rem 0 0;
+    color: var(--text-muted);
+  }
+}
+
+.chart-card__canvas {
+  min-height: 320px;
+}
+
+.chart-card__empty {
+  min-height: 320px;
+  display: grid;
+  place-items: center;
+  color: var(--text-muted);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.04);
+}

@@ -1,0 +1,8 @@
+{
+    "terminal.integrated.cwd": "${workspaceFolder}/backend",
+    "files.exclude": {
+        "**/node_modules": true,
+        "**/.env": true
+    },
+    "editor.formatOnSave": true
+}

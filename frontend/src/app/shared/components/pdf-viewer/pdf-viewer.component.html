@@ -1,0 +1,13 @@
+<mat-card class="pdf-viewer">
+  <div class="pdf-viewer__header">
+    <h3>{{ title() }}</h3>
+  </div>
+
+  @if (safeSourceText) {
+    <iframe [src]="safeSource" title="Payslip PDF preview"></iframe>
+  } @else {
+    <div class="pdf-viewer__empty">
+      Select a payslip to render the live PDF stream.
+    </div>
+  }
+</mat-card>

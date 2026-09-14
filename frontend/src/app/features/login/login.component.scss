@@ -1,0 +1,97 @@
+.login-page {
+  min-height: 100dvh;
+  display: grid;
+  grid-template-columns: 1.2fr 0.9fr;
+  gap: 2rem;
+  align-items: center;
+  padding: clamp(1.5rem, 3vw, 3rem);
+  background:
+    radial-gradient(circle at top left, rgba(227, 30, 36, 0.24), transparent 30%),
+    linear-gradient(160deg, rgba(255, 255, 255, 0.03), transparent 45%),
+    var(--app-background);
+}
+
+.login-page__hero {
+  padding: clamp(1.5rem, 3vw, 3rem);
+
+  h1 {
+    max-width: 14ch;
+    margin: 0;
+    font-size: clamp(2.6rem, 5vw, 5rem);
+    line-height: 0.95;
+  }
+
+  p {
+    max-width: 56ch;
+    margin: 1rem 0 2rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+}
+
+.login-page__tag {
+  display: inline-flex;
+  margin-bottom: 1rem;
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  background: rgba(227, 30, 36, 0.16);
+  color: var(--brand-red);
+  letter-spacing: 0.18em;
+  font-size: 0.78rem;
+}
+
+.login-card {
+  padding: 1.8rem;
+  border-radius: 30px;
+  background: var(--surface-glass);
+  border: 1px solid var(--border-soft);
+  backdrop-filter: blur(22px);
+  box-shadow: var(--shadow-strong);
+}
+
+.login-card__header {
+  margin-bottom: 1.25rem;
+
+  h2,
+  p {
+    margin: 0;
+  }
+
+  p {
+    margin-top: 0.5rem;
+    color: var(--text-muted);
+  }
+}
+
+.login-form {
+  display: grid;
+  gap: 1rem;
+}
+
+.form-field {
+  width: 100%;
+
+  ::ng-deep {
+    .mdc-text-field__input {
+      padding: 0.75rem 0.5rem !important;
+      line-height: 1.5;
+    }
+
+    .mat-mdc-form-field-infix {
+      padding-top: 0.75rem;
+      padding-bottom: 0.75rem;
+    }
+  }
+}
+
+button[mat-flat-button] {
+  min-height: 54px;
+  border-radius: 18px;
+  box-shadow: inset 5px 5px 12px rgba(255, 255, 255, 0.1), inset -8px -8px 16px rgba(0, 0, 0, 0.3);
+}
+
+@media (max-width: 960px) {
+  .login-page {
+    grid-template-columns: 1fr;
+  }
+}

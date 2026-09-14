@@ -1,0 +1,48 @@
+<section class="login-page">
+  <div class="login-page__hero">
+    <span class="login-page__tag">KAAR TECH PORTAL</span>
+    <h1>Secure employee access with real-time leave and payroll visibility.</h1>
+    <p>
+      Sign in using your SAP-backed employee credentials to open the live dashboard, profile,
+      leave analytics, and payslip stream.
+    </p>
+
+    <button mat-stroked-button type="button" (click)="toggleTheme()">
+      <mat-icon>{{ isDarkMode() ? 'light_mode' : 'dark_mode' }}</mat-icon>
+      Toggle {{ isDarkMode() ? 'Light' : 'Dark' }} Mode
+    </button>
+  </div>
+
+  <mat-card class="login-card">
+    <div class="login-card__header">
+      <h2>Employee Login</h2>
+      <p>Use your personnel number and password.</p>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="login-form">
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Employee ID</mat-label>
+        <input matInput formControlName="username" autocomplete="username" />
+        <mat-icon matSuffix>badge</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="form-field">
+        <mat-label>Password</mat-label>
+        <input matInput [type]="showPassword() ? 'text' : 'password'" formControlName="password"
+          autocomplete="current-password" />
+        <button mat-icon-button matSuffix type="button" (click)="togglePasswordVisibility()"
+          [attr.aria-label]="showPassword() ? 'Hide password' : 'Show password'">
+          <mat-icon>{{ showPassword() ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+      </mat-form-field>
+
+      <button mat-flat-button color="warn" type="submit" [disabled]="isSubmitting()">
+        @if (isSubmitting()) {
+        <mat-spinner diameter="20"></mat-spinner>
+        } @else {
+        <span>Login to Portal</span>
+        }
+      </button>
+    </form>
+  </mat-card>
+</section>

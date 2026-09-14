@@ -1,0 +1,28 @@
+<div class="dialog-shell">
+  <div class="dialog-header">
+    <div>
+      <span class="eyebrow">Full details</span>
+      <h2>{{ record.leaveTypeText || record.type }}</h2>
+      <p>{{ record.employeeName || ('Employee ' + record.pernr) }}</p>
+    </div>
+
+    <div class="dialog-actions">
+      <button mat-stroked-button type="button" (click)="exportToPdf()">Export PDF</button>
+      <button mat-stroked-button type="button" (click)="exportToExcel()">Export Excel</button>
+      <button mat-flat-button type="button" (click)="close()">Close</button>
+    </div>
+  </div>
+
+  <div class="details-table-wrap">
+    <table class="details-table">
+      <tbody>
+        @for (row of detailRows(); track row.label) {
+          <tr>
+            <th>{{ row.label }}</th>
+            <td>{{ row.value }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

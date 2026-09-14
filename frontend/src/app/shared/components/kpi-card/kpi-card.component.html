@@ -1,0 +1,12 @@
+<mat-card class="kpi-card" [class.warn]="accent() === 'warn'" [class.neutral]="accent() === 'neutral'">
+  <div class="kpi-card__icon">
+    <mat-icon>{{ icon() }}</mat-icon>
+  </div>
+  <div class="kpi-card__body">
+    <span class="kpi-card__title">{{ title() }}</span>
+    <strong class="kpi-card__value">{{ value() }}</strong>
+    @if (subtitle()) {
+      <span class="kpi-card__subtitle">{{ subtitle() }}</span>
+    }
+  </div>
+</mat-card>

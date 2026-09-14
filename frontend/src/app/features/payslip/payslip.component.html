@@ -1,0 +1,174 @@
+<section class="page-grid">
+  <header class="page-header">
+    <h2>Payslip overview</h2>
+  </header>
+
+  <mat-card class="header-card">
+    <div class="header-card__content">
+      <div>
+        <span class="eyebrow">Header context</span>
+        <h3>{{ headerEmployee() }}</h3>
+        <p>{{ headerDesignation() }} | {{ headerDepartment() }}</p>
+      </div>
+
+      <div class="header-card__meta">
+        <span>Bank account {{ headerBankAccount() }}</span>
+        <span>Bank key {{ headerBankKey() }}</span>
+      </div>
+    </div>
+  </mat-card>
+
+  <div class="filter-row">
+    <label class="filter-field">
+      <span>Pay Month</span>
+      <select [ngModel]="selectedMonth()" (ngModelChange)="updateMonth($event)"
+        title="Filter statements by payroll month">
+        <option value="all">All months</option>
+        @for (month of monthOptions; track month) {
+        <option [value]="month">{{ monthLabel(month) }}</option>
+        }
+      </select>
+    </label>
+
+    <label class="filter-field">
+      <span>Pay Year</span>
+      <select [ngModel]="selectedYear()" (ngModelChange)="updateYear($event)" title="Filter statements by payroll year">
+        <option value="all">All years</option>
+        @for (year of yearOptions(); track year) {
+        <option [value]="year">{{ year }}</option>
+        }
+      </select>
+    </label>
+  </div>
+
+  @if (loading()) {
+  <div class="loading-strip">
+    <mat-icon>sync</mat-icon>
+    <span>Fetching payslip data from SAP</span>
+  </div>
+  }
+
+  <div class="kpi-grid">
+    <app-kpi-card title="Gross Pay" [value]="grossPay()" subtitle="Total earnings" icon="payments" accent="neutral" />
+    <app-kpi-card title="Total Deductions" [value]="totalDeductions()" subtitle="Payroll deductions"
+      icon="trending_down" accent="warn" />
+    <app-kpi-card title="Net Pay" [value]="netPay()" subtitle="Take-home pay" icon="account_balance_wallet" />
+  </div>
+
+  <mat-card class="table-card">
+    <div class="table-card__header">
+      <div>
+        <h3>Payslip statements</h3>
+        <p>Monthly payroll totals are fetched for the selected period.</p>
+      </div>
+    </div>
+
+    <table mat-table [dataSource]="filteredStatements()" class="payslip-table">
+      <ng-container matColumnDef="period">
+        <th mat-header-cell *matHeaderCellDef>Month / Year</th>
+        <td mat-cell *matCellDef="let statement">
+          <div class="table-primary">{{ statement.label }}</div>
+          <div class="table-secondary">{{ statement.wageLines.length }} wage lines</div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="gross">
+        <th mat-header-cell *matHeaderCellDef>Gross Pay</th>
+        <td mat-cell *matCellDef="let statement">
+          <div class="table-primary">{{ statement.grossPay | number: '1.2-2' }}</div>
+          <div class="table-secondary">{{ statement.currency || 'INR' }}</div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="deductions">
+        <th mat-header-cell *matHeaderCellDef>Deductions</th>
+        <td mat-cell *matCellDef="let statement">
+          <div class="table-primary">{{ statement.totalDeductions | number: '1.2-2' }}</div>
+          <div class="table-secondary">{{ statement.currency || 'INR' }}</div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="net">
+        <th mat-header-cell *matHeaderCellDef>Net Amount</th>
+        <td mat-cell *matCellDef="let statement">
+          <div class="table-primary">{{ statement.netPay | number: '1.2-2' }}</div>
+          <div class="table-secondary">{{ statement.currency || 'INR' }}</div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let statement">
+          <span class="status-chip" [ngClass]="statusClass(statement.status)">{{ statement.status }}</span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let statement">
+          <div class="action-buttons">
+            <button mat-icon-button type="button" (click)="openDetails(statement)" aria-label="View details"
+              matTooltip="Open the full payslip wage breakdown">
+              <mat-icon>visibility</mat-icon>
+            </button>
+            <button mat-icon-button type="button" (click)="downloadPdf(statement)" aria-label="Download PDF"
+              matTooltip="Download this payslip as a PDF">
+              <mat-icon>download</mat-icon>
+            </button>
+            <button mat-icon-button type="button" (click)="printPdf(statement)" aria-label="Print payslip"
+              matTooltip="Print this payslip">
+              <mat-icon>print</mat-icon>
+            </button>
+            <button mat-icon-button type="button" (click)="mailPayslip(statement)" aria-label="Mail payslip"
+              matTooltip="Create an email for this payslip">
+              <mat-icon>mail</mat-icon>
+            </button>
+            <button mat-icon-button type="button" (click)="previewPdf(statement)" aria-label="Open PDF"
+              matTooltip="Open this payslip in a new tab">
+              <mat-icon>open_in_new</mat-icon>
+            </button>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+
+    @if (!filteredStatements().length) {
+    <div class="empty-state">
+      <mat-icon>receipt_long</mat-icon>
+      <p>No payslip statements are available for the selected month and year.</p>
+    </div>
+    }
+  </mat-card>
+
+  @if (activeStatement(); as statement) {
+  <mat-card class="components-card">
+    <div class="table-card__header">
+      <div>
+        <h3>Salary components</h3>
+        <p>{{ statement.label }} wage lines, earnings, deductions, and net pay.</p>
+      </div>
+
+      <button mat-flat-button type="button" (click)="downloadPdf(statement)"
+        matTooltip="Generate the Adobe Form PDF from SAP">
+        <mat-icon>download</mat-icon>
+        Download PDF
+      </button>
+    </div>
+
+    <div class="component-list">
+      @for (line of activeWageLines(); track line.id) {
+      <div class="component-row" [class.component-row--deduction]="line.amount < 0">
+        <div>
+          <strong>{{ line.wageText || line.wageType || 'Payroll item' }}</strong>
+          <span>{{ displayCode(line.wageType) }}</span>
+        </div>
+        <b>{{ line.amount | number: '1.2-2' }} {{ line.currency || statement.currency || 'INR' }}</b>
+      </div>
+      }
+    </div>
+  </mat-card>
+  }
+</section>

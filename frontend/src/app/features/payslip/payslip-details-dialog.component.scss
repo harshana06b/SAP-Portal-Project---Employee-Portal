@@ -1,0 +1,215 @@
+.dialog-shell {
+  display: grid;
+  gap: 1.8rem; // 🔥 improved spacing
+  min-width: min(1100px, 92vw);
+}
+
+.dialog-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.2rem;
+  margin-bottom: 0.8rem;
+
+  h2 {
+    margin: 0;
+    margin-left: 1.25rem;
+    margin-top: 0.25rem;
+
+    line-height: 1.3;
+  }
+
+  p {
+    margin-top: 0.4rem;
+    margin-left: 1.25rem;
+    color: var(--text-muted);
+  }
+}
+
+.eyebrow {
+  display: inline-block;
+  margin-bottom: 0.5rem;
+  margin-left: 1.25rem;
+  margin-top: 1.25rem;
+  color: var(--brand-red);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.dialog-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-top: 1.5rem;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem;
+}
+
+.info-card,
+.table-card {
+  padding: 1.4rem 1.5rem;
+  border-radius: 18px;
+  border: 1px solid var(--border-soft);
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.info-card h3,
+.section-head h3 {
+  margin: 0 0 1rem;
+}
+
+.meta-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.2rem;
+
+  div {
+    line-height: 1.5;
+  }
+
+  span {
+    display: block;
+    margin-bottom: 0.3rem;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+  }
+
+  strong {
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+}
+
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.2rem;
+}
+
+.wage-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+
+  thead tr {
+    background: rgba(227, 30, 36, 0.08);
+  }
+
+  th {
+    padding: 1rem 1.2rem;
+    text-align: left;
+    font-weight: 600;
+  }
+
+  td {
+    padding: 1.2rem 1.2rem;
+    border-bottom: 1px solid rgba(227, 30, 36, 0.08);
+  }
+
+  tr:nth-child(even) {
+    background: rgba(255, 247, 247, 0.7);
+  }
+
+  tr:nth-child(odd) {
+    background: rgba(255, 255, 255, 0.96);
+  }
+
+  tbody tr:hover {
+    background: rgba(227, 30, 36, 0.05);
+  }
+
+  /* 🔥 RIGHT ALIGN AMOUNT */
+  td:nth-child(3),
+  th:nth-child(3) {
+    text-align: right;
+  }
+}
+
+/* 🔥 Optional polish */
+.table-card {
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+}
+
+/* 🔥 Responsive */
+@media (max-width: 960px) {
+  .dialog-shell {
+    min-width: auto;
+  }
+
+  .dialog-header,
+  .section-head {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .info-grid,
+  .meta-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* 🔥 HEADER FIX */
+  .dialog-header {
+    align-items: center; // FIX alignment
+  }
+
+  /* 🔥 CARD POLISH */
+  .info-card {
+    transition: all 0.2s ease;
+  }
+
+  .info-card:hover {
+    transform: translateY(-2px);
+  }
+
+  /* 🔥 TABLE IMPROVEMENTS */
+  .wage-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+
+    thead {
+      position: sticky; // ✅ STICKY HEADER
+      top: 0;
+      z-index: 2;
+    }
+
+    thead tr {
+      background: rgba(227, 30, 36, 0.08);
+    }
+
+    th {
+      padding: 1rem 1.2rem;
+      font-weight: 600;
+    }
+
+    td {
+      padding: 1.2rem;
+    }
+
+    /* 🔥 ALIGN MONEY */
+    td:nth-child(3),
+    th:nth-child(3) {
+      text-align: right;
+    }
+
+    /* 🔥 STRONG TOTAL ROW */
+    tfoot {
+      background: rgba(227, 30, 36, 0.12);
+      font-weight: 600;
+    }
+  }
+
+  /* 🔥 SCROLLABLE TABLE (if many rows) */
+  .table-card {
+    max-height: 400px;
+    overflow-y: auto;
+  }
+}

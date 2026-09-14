@@ -1,0 +1,20 @@
+[
+  {
+    "pernr": "00000001",
+    "leaveType": "0300",
+    "beginDate": "2026-06-17",
+    "endDate": "2026-06-19",
+    "noOfDays": 3,
+    "reason": "",
+    "updatedAt": "2026-06-02T11:37:51.217Z"
+  },
+  {
+    "pernr": "00000001",
+    "leaveType": "0300",
+    "beginDate": "2026-06-24",
+    "endDate": "2026-06-26",
+    "noOfDays": 3,
+    "reason": "",
+    "updatedAt": "2026-06-02T11:38:32.522Z"
+  }
+]

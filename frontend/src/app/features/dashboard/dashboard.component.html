@@ -1,0 +1,69 @@
+<section class="page-grid">
+  <header class="page-header">
+    <div>
+      <span class="page-header__eyebrow">Live analytics</span>
+      <h2>Employee dashboard</h2>
+      <p>Live KPIs and charts powered directly by the Node.js and SAP OData backend.</p>
+    </div>
+  </header>
+
+  <mat-card class="filter-card">
+    <div class="filter-card__header">
+      <div>
+        <h3>Dashboard filters</h3>
+        <p>Refine the live charts by year and leave status, then reset in one click.</p>
+      </div>
+
+      <button mat-stroked-button type="button" (click)="resetFilters()" matTooltip="Reset dashboard filters">
+        <mat-icon>restart_alt</mat-icon>
+        Reset filters
+      </button>
+    </div>
+
+    <div class="filter-grid">
+      <label class="filter-field">
+        <span>Year</span>
+        <select [ngModel]="selectedYear()" (ngModelChange)="updateYear($event)" title="Filter charts by year">
+          <option value="all">All years</option>
+          @for (year of availableYears(); track year) {
+            <option [value]="year">{{ year }}</option>
+          }
+        </select>
+      </label>
+
+      <label class="filter-field">
+        <span>Leave status</span>
+        <select [ngModel]="selectedStatus()" (ngModelChange)="updateStatus($event)"
+          title="Filter charts by leave approval status">
+          <option value="all">All statuses</option>
+          @for (status of availableStatuses(); track status) {
+            <option [value]="status.toLowerCase()">{{ status }}</option>
+          }
+        </select>
+      </label>
+    </div>
+  </mat-card>
+
+  <div class="kpi-grid">
+    <app-kpi-card title="Total Leave" [value]="leaveSummary().total" subtitle="Calendar days across filtered records"
+      icon="summarize" />
+    <app-kpi-card title="Used Leave" [value]="leaveSummary().used" subtitle="Consumed days from SAP leave entries"
+      icon="trending_up" accent="warn" />
+    <app-kpi-card title="Balance Leave" [value]="leaveSummary().balance" subtitle="Available leave after usage"
+      icon="event_available" accent="neutral" />
+  </div>
+
+  <div class="chart-grid">
+    <app-chart title="Leave Trends" subtitle="Monthly leave usage from leave history and requests" type="line"
+      [data]="leaveTrendData()" [options]="lineChartOptions"
+      emptyMessage="No leave trend data is available for the current filters." />
+
+    <app-chart title="Leave Mix" subtitle="Leave distribution by type from history and requests" type="doughnut"
+      [data]="leaveMixData()" [options]="doughnutChartOptions"
+      emptyMessage="No leave mix data is available for the current filters." />
+
+    <app-chart title="Finance Aging" subtitle="Payroll value grouped into aging buckets from payroll periods" type="bar"
+      [data]="agingData()" [options]="barChartOptions"
+      emptyMessage="No finance aging data is available for the current filters." />
+  </div>
+</section>

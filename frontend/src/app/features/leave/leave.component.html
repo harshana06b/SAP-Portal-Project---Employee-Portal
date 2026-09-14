@@ -1,0 +1,247 @@
+<section class="page-grid">
+  <header class="page-header">
+    <h2>Employee Leave Data</h2>
+    <p>Review leave requests and complete leave history from SAP.</p>
+  </header>
+
+  <mat-card class="table-card">
+    <div class="table-card__header">
+      <div>
+        <h3>Leave Report</h3>
+      </div>
+
+      <div class="table-actions">
+        <button mat-stroked-button type="button" (click)="clearFilters()" matTooltip="Reset all leave filters">
+          <mat-icon>filter_alt_off</mat-icon>
+          Reset filter
+        </button>
+        <button mat-flat-button color="primary" type="button" (click)="showRequestForm.set(!showRequestForm())"
+          matTooltip="Create a new leave request">
+          <mat-icon>add</mat-icon>
+          Create Request
+        </button>
+      </div>
+    </div>
+
+    @if (showRequestForm()) {
+    <div class="request-panel">
+      <div class="table-card__header">
+        <div>
+          <h3>Create New Leave Request</h3>
+          <p>Status will be saved as SUBMITTED.</p>
+        </div>
+        @if (saving()) {
+        <mat-spinner diameter="28" />
+        }
+      </div>
+
+      <div class="request-grid">
+        <label class="filter-field">
+          <span>Employee ID</span>
+          <input type="text" [value]="currentEmployeeId()" title="Employee ID" readonly />
+        </label>
+
+        <label class="filter-field">
+          <span>Leave Type</span>
+          <select [ngModel]="requestForm().leaveType" (ngModelChange)="updateRequestField('leaveType', $event)"
+            title="Select a valid leave type">
+            <option value="">Select leave type</option>
+            @for (type of leaveTypeOptions(); track type[0]) {
+            <option [value]="type[0]">{{ type[1] }}</option>
+            }
+          </select>
+        </label>
+
+        <label class="filter-field">
+          <span>Begin Date</span>
+          <input type="date" [ngModel]="requestForm().startDate"
+            (ngModelChange)="updateRequestField('startDate', $event)" [max]="requestForm().endDate"
+            title="Begin date" />
+        </label>
+
+        <label class="filter-field">
+          <span>End Date</span>
+          <input type="date" [ngModel]="requestForm().endDate" (ngModelChange)="updateRequestField('endDate', $event)"
+            [min]="requestForm().startDate" title="End date" />
+        </label>
+
+        <label class="filter-field request-grid__reason">
+          <span>Reason</span>
+          <input type="text" [ngModel]="requestForm().reason" (ngModelChange)="updateRequestField('reason', $event)"
+            placeholder="Reason" title="Reason" />
+        </label>
+
+        <button mat-flat-button color="primary" type="button" (click)="submitLeaveRequest()" [disabled]="saving()">
+          <mat-icon>send</mat-icon>
+          Submit {{ requestDays() ? requestDays() + ' day request' : 'request' }}
+        </button>
+      </div>
+    </div>
+    }
+
+    <mat-tab-group class="leave-tabs" [selectedIndex]="selectedTabIndex()"
+      (selectedIndexChange)="selectDataset($event)">
+      <mat-tab label="Leave Requests"></mat-tab>
+      <mat-tab label="Leave History"></mat-tab>
+    </mat-tab-group>
+
+    <div class="filter-grid">
+      <label class="filter-field">
+        <span>Search</span>
+        <input type="text" [ngModel]="searchTerm()" (ngModelChange)="updateSearchTerm($event)"
+          placeholder="Search leave type, status, reason" title="Search leave report" />
+      </label>
+
+      <label class="filter-field">
+        <span>Leave Type</span>
+        <select [ngModel]="leaveTypeFilter()" (ngModelChange)="updateLeaveTypeFilter($event)"
+          title="Filter by leave type">
+          <option value="all">All leave types</option>
+          @for (type of leaveTypeOptions(); track type[0]) {
+          <option [value]="type[0].toLowerCase()">{{ type[1] }}</option>
+          }
+        </select>
+      </label>
+
+      <label class="filter-field">
+        <span>Status</span>
+        <select [ngModel]="statusFilter()" (ngModelChange)="updateStatusFilter($event)" title="Filter by leave status">
+          <option value="all">All statuses</option>
+          @for (status of availableStatuses(); track status) {
+          <option [value]="status.toLowerCase()">{{ status }}</option>
+          }
+        </select>
+      </label>
+
+      <label class="filter-field">
+        <span>Date From</span>
+        <input type="date" [ngModel]="fromDateFilter()" (ngModelChange)="updateFromDateFilter($event)"
+          [max]="toDateFilter()" title="Date range start" />
+      </label>
+
+      <label class="filter-field">
+        <span>Date To</span>
+        <input type="date" [ngModel]="toDateFilter()" (ngModelChange)="updateToDateFilter($event)"
+          [min]="fromDateFilter()" title="Date range end" />
+      </label>
+
+      <label class="filter-field">
+        <span>Sort</span>
+        <select [ngModel]="sortOption()" (ngModelChange)="updateSortOption($event)" title="Sort leave report">
+          <option value="beginDate">Begin Date</option>
+          <option value="endDate">End Date</option>
+          <option value="type">Leave Type</option>
+          <option value="status">Status</option>
+        </select>
+      </label>
+    </div>
+
+    @if (loading()) {
+    <div class="loading-state">
+      <mat-spinner diameter="36" />
+      <p>Loading leave data from ZEMPLOYEE_NEW_SRV...</p>
+    </div>
+    }
+
+    <div class="table-scroll">
+      <table mat-table [dataSource]="pagedRecords()" class="leave-table">
+        <ng-container matColumnDef="employeeId">
+          <th mat-header-cell *matHeaderCellDef>Employee ID</th>
+          <td mat-cell *matCellDef="let record">
+            <div class="table-primary">{{ recordText(record, ['Pernr']) }}</div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="sapLeaveType">
+          <th mat-header-cell *matHeaderCellDef>Leave Type</th>
+          <td mat-cell *matCellDef="let record">
+            <div class="table-primary">{{ recordText(record, ['Leavetype', 'LeaveType', 'AbsType', 'Awart']) }}</div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="sapLeaveDesc">
+          <th mat-header-cell *matHeaderCellDef>Leave Description</th>
+          <td mat-cell *matCellDef="let record">
+            <div class="table-primary">{{ recordText(record, ['LeaveDesc', 'Leavedesc', 'LeaveTypeText', 'TypeName',
+              'Atext']) }}</div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="beginDate">
+          <th mat-header-cell *matHeaderCellDef>Begin Date</th>
+          <td mat-cell *matCellDef="let record">
+            {{ recordDate(record, ['Begda', 'FromDate', 'StartDate'], 'dd MMM yyyy', record.startDate) }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="endDate">
+          <th mat-header-cell *matHeaderCellDef>End Date</th>
+          <td mat-cell *matCellDef="let record">
+            {{ recordDate(record, ['Endda', 'ToDate', 'EndDate'], 'dd MMM yyyy', record.endDate) }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="numberOfDays">
+          <th mat-header-cell *matHeaderCellDef>Number of Days</th>
+          <td mat-cell *matCellDef="let record">
+            <div class="table-primary">{{ recordNumber(record, ['Noofdays', 'NoOfDays', 'DaysUsed']) }}</div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="reason">
+          <th mat-header-cell *matHeaderCellDef>Reason</th>
+          <td mat-cell *matCellDef="let record">
+            {{ record.reason || recordText(record, ['Reason'], 'N/A') }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let record">
+            <span class="status-chip" [ngClass]="statusClass(record.status)">{{ record.status }}</span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="action">
+          <th mat-header-cell *matHeaderCellDef>Action</th>
+          <td mat-cell *matCellDef="let record">
+            @if (canWithdraw(record)) {
+            <button mat-stroked-button color="warn" type="button" class="withdraw-button"
+              (click)="withdrawLeave(record)" matTooltip="Withdraw this submitted leave request">
+              Withdraw Leave
+            </button>
+            }
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns()"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns()"></tr>
+      </table>
+    </div>
+
+    @if (!loading() && !filteredRecords().length) {
+    <div class="empty-state">
+      <mat-icon>search_off</mat-icon>
+      <p>No leave data is available for the selected filters.</p>
+    </div>
+    }
+
+    @if (filteredRecords().length) {
+    <div class="pagination-bar">
+      <span>
+        Page {{ pageIndex() + 1 }} of {{ pageCount() }} - {{ filteredRecords().length }} records
+      </span>
+      <div>
+        <button mat-stroked-button type="button" (click)="previousPage()" [disabled]="pageIndex() === 0">
+          <mat-icon>chevron_left</mat-icon>
+          Previous
+        </button>
+        <button mat-stroked-button type="button" (click)="nextPage()" [disabled]="pageIndex() + 1 >= pageCount()">
+          Next
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
+    </div>
+    }
+  </mat-card>
+</section>

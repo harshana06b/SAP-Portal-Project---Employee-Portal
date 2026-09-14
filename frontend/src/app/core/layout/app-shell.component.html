@@ -1,0 +1,117 @@
+<mat-sidenav-container class="portal-shell">
+  <mat-sidenav class="portal-shell__sidebar" [mode]="sidebarMode()" [opened]="sidebarOpened()">
+    <div class="brand-block">
+      <span class="brand-block__eyebrow">KAAR TECH</span>
+      <h1>Employee Portal</h1>
+      <p>Performance-first workspace for HR, payroll, and profile visibility.</p>
+    </div>
+
+    <nav class="portal-nav">
+      <a mat-button routerLink="/dashboard" routerLinkActive="active-link" [routerLinkActiveOptions]="{ exact: true }"
+        matTooltip="Open your live dashboard">
+        <mat-icon>space_dashboard</mat-icon>
+        <span>Dashboard</span>
+      </a>
+
+      <button mat-button type="button" class="portal-nav__dropdown" (click)="toggleDashboardGroup()"
+        matTooltip="Show or hide dashboard items">
+        <div>
+          <span>Items</span>
+        </div>
+        <mat-icon>{{ dashboardExpanded() ? 'expand_less' : 'expand_more' }}</mat-icon>
+      </button>
+
+      @if (dashboardExpanded()) {
+      <div class="portal-nav__children">
+        <a mat-button routerLink="/dashboard/leave" routerLinkActive="active-link"
+          matTooltip="Review leave records and reports">
+          <mat-icon>event_available</mat-icon>
+          <span>Leave Data</span>
+        </a>
+        <a mat-button routerLink="/dashboard/payslip" routerLinkActive="active-link"
+          matTooltip="Open payslips and payroll details">
+          <mat-icon>receipt_long</mat-icon>
+          <span>Payslip</span>
+        </a>
+      </div>
+      }
+
+      <a mat-button routerLink="/profile" routerLinkActive="active-link" matTooltip="View your SAP employee profile">
+        <mat-icon>badge</mat-icon>
+        <span>Profile</span>
+      </a>
+    </nav>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <header class="portal-toolbar" #portalToolbar>
+      <div class="portal-toolbar__left">
+        <button mat-icon-button type="button" aria-label="Toggle navigation" (click)="toggleSidebar()"
+          matTooltip="Open navigation menu">
+          <mat-icon>menu</mat-icon>
+        </button>
+      </div>
+
+      <div class="portal-toolbar__right">
+        @if (hasNotifications()) {
+        <button mat-stroked-button type="button" class="alert-chip" [matMenuTriggerFor]="alertsMenu"
+          [matBadge]="unreadCount()" matBadgeColor="warn" [matBadgeHidden]="!unreadCount()" aria-label="Open alerts"
+          matTooltip="Open recent dashboard and leave alerts">
+          <mat-icon>notifications_active</mat-icon>
+          <span>{{ latestAlertSummary() }}</span>
+        </button>
+        }
+
+        <button mat-icon-button type="button" class="theme-toggle" (click)="toggleTheme()"
+          [attr.aria-label]="isDarkMode() ? 'Switch to light mode' : 'Switch to dark mode'"
+          [matTooltip]="isDarkMode() ? 'Switch to light mode' : 'Switch to dark mode'">
+          <mat-icon>{{ isDarkMode() ? 'light_mode' : 'dark_mode' }}</mat-icon>
+        </button>
+
+        <button mat-stroked-button type="button" [matMenuTriggerFor]="profileMenu" class="profile-chip"
+          matTooltip="Open your account quick actions">
+          <mat-icon>account_circle</mat-icon>
+          <span>{{ displayName() }}</span>
+          <small>{{ sessionUser()?.pernr }}</small>
+        </button>
+
+        <button mat-flat-button color="warn" type="button" class="logout-button" (click)="logout()"
+          matTooltip="End your current session">
+          Logout
+        </button>
+      </div>
+    </header>
+
+    <main class="portal-content">
+      <router-outlet />
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
+<mat-menu #profileMenu="matMenu" class="portal-menu">
+  <div class="profile-menu">
+    <strong>{{ displayName() }}</strong>
+    <span>Employee ID: {{ sessionUser()?.pernr }}</span>
+    <button mat-flat-button color="warn" type="button" (click)="openProfile()">View Full Profile</button>
+  </div>
+</mat-menu>
+
+<mat-menu #alertsMenu="matMenu" class="portal-menu">
+  <div class="alerts-menu">
+    <div class="alerts-menu__header">
+      <div>
+        <strong>Notifications</strong>
+        <span>Live alerts from leave, dashboard, and profile modules.</span>
+      </div>
+      <button mat-button type="button" (click)="clearNotifications()">Clear all</button>
+    </div>
+    @for (alert of notifications(); track alert.id) {
+    <article class="alert-item">
+      <strong>{{ alert.title }}</strong>
+      <p>{{ alert.description }}</p>
+    </article>
+    } @empty {
+    <p class="alerts-empty">All caught up. No new alerts.</p>
+    }
+  </div>
+</mat-menu>

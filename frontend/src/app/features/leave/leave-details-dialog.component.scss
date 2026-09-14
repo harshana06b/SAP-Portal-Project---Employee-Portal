@@ -1,0 +1,145 @@
+.dialog-shell {
+  display: grid;
+  gap: 1.25rem;
+  min-width: min(920px, 88vw);
+  max-height: min(760px, 86vh);
+  color: var(--text-primary);
+}
+
+.dialog-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+
+  h2 {
+    margin: 0;
+    font-size: clamp(1.45rem, 2.6vw, 2rem);
+    margin-left: 1.25rem;
+    margin-top: 0.25rem;
+    line-height: 1.08;
+    font-weight: 800;
+  }
+
+  p {
+    margin: 0.35rem 0 0;
+    margin-left: 1.25rem;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+  }
+
+  >div:first-child {
+    min-width: 0;
+  }
+}
+
+.eyebrow {
+  display: inline-block;
+  margin-top: 1rem;
+  /* add this */
+  margin-bottom: 0.35rem;
+  margin-left: 1.25rem;
+  margin-right: 0.5em;
+  color: var(--brand-red);
+  text-transform: uppercase;
+  letter-spacing: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+
+
+.dialog-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  justify-content: flex-end;
+  flex: 0 0 auto;
+
+  button {
+    min-height: 2.5rem;
+    border-radius: 8px;
+    white-space: nowrap;
+  }
+}
+
+.details-table-wrap {
+  max-height: 620px;
+  overflow: auto;
+  border-radius: 8px;
+  border: 1px solid var(--border-soft);
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.details-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  tr:nth-child(odd) {
+    background: rgba(255, 255, 255, 0.92);
+  }
+
+  tr:nth-child(even) {
+    background: rgba(255, 241, 241, 0.92);
+  }
+
+  tr:last-child th,
+  tr:last-child td {
+    border-bottom: 0;
+  }
+
+  th,
+  td {
+    padding: 0.95rem 1.1rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(105, 97, 101, 0.1);
+    vertical-align: top;
+  }
+
+  th {
+    width: 230px;
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 0.9rem;
+  }
+
+  td {
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+}
+
+@media (max-width: 960px) {
+  .dialog-shell {
+    min-width: auto;
+  }
+
+  .dialog-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .dialog-actions {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 640px) {
+  .details-table {
+
+    th,
+    td {
+      display: block;
+      width: 100%;
+    }
+
+    th {
+      padding-bottom: 0.25rem;
+      border-bottom: 0;
+    }
+
+    td {
+      padding-top: 0;
+    }
+  }
+}

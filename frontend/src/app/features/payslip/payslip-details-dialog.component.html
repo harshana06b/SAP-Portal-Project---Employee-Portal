@@ -1,0 +1,110 @@
+<div class="dialog-shell">
+  <div class="dialog-header">
+    <div>
+      <span class="eyebrow">Payroll details</span>
+      <h2>{{ statement.label }}</h2>
+      <p>{{ statement.employeeName || ('Employee ' + displayCode(statement.pernr)) }}</p>
+    </div>
+
+    <div class="dialog-actions">
+      <button mat-stroked-button type="button" (click)="viewPdf()" matTooltip="Open the SAP PDF in a new tab">
+        <mat-icon>open_in_new</mat-icon>
+        View PDF
+      </button>
+
+      <button mat-stroked-button type="button" (click)="downloadPdf()" matTooltip="Download the SAP PDF to your device">
+        <mat-icon>download</mat-icon>
+        Download PDF
+      </button>
+
+      <button mat-stroked-button type="button" (click)="printPdf()" matTooltip="Print the SAP payslip PDF">
+        <mat-icon>print</mat-icon>
+        Print
+      </button>
+
+      <button mat-stroked-button type="button" (click)="mailPayslip()" matTooltip="Create an email for this payslip">
+        <mat-icon>mail</mat-icon>
+        Mail
+      </button>
+
+      <button mat-flat-button type="button" (click)="close()" matTooltip="Close the payslip detail dialog">
+        Close
+      </button>
+    </div>
+  </div>
+
+  <!-- 🔥 HEADER INFO -->
+  <div class="info-grid">
+    <section class="info-card">
+      <h3>Header Context</h3>
+      <div class="meta-grid">
+        <div>
+          <span>Employee</span>
+          <strong>{{ statement.employeeName || 'Not available' }}</strong>
+        </div>
+
+        <div>
+          <span>Designation</span>
+          <strong>{{ statement.designation || 'Not available' }}</strong>
+        </div>
+
+        <div>
+          <span>Department</span>
+          <strong>{{ statement.department || 'Not available' }}</strong>
+        </div>
+      </div>
+    </section>
+
+    <section class="info-card">
+      <h3>Payment Insight</h3>
+      <div class="meta-grid">
+        <div>
+          <span>Bank account</span>
+          <strong>{{ bankAccountMasked() }}</strong>
+        </div>
+
+        <div>
+          <span>Bank key</span>
+          <strong>{{ statement.bankKey || 'Not available' }}</strong>
+        </div>
+
+        <div>
+          <span>Status</span>
+          <strong>{{ statement.status }}</strong>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- 🔥 TABLE -->
+  <section class="table-card">
+    <div class="section-head">
+      <h3>Wage Table</h3>
+    </div>
+
+    <table class="wage-table">
+      <thead>
+        <tr>
+          <th>Wage Type</th>
+          <th>Description</th>
+          <th>Amount</th>
+          <th>Currency</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (line of statement.wageLines; track line.id) {
+        <tr>
+          <td>{{ displayCode(line.wageType) }}</td>
+
+          <td>{{ line.wageText || 'Payroll item' }}</td>
+
+          <td>{{ line.amount | number: '1.2-2' }}</td>
+
+          <td>{{ line.currency || statement.currency || 'INR' }}</td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </section>
+</div>

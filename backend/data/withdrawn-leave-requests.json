@@ -1,0 +1,23 @@
+{
+  "00000002|0300|2026-04-08": {
+    "pernr": "00000002",
+    "leaveType": "0300",
+    "beginDate": "2026-04-08",
+    "status": "WITHDRAW REQUEST",
+    "updatedAt": "2026-05-24T15:46:03.495Z"
+  },
+  "00000001|0320|2026-05-31": {
+    "pernr": "00000001",
+    "leaveType": "0320",
+    "beginDate": "2026-05-31",
+    "status": "WITHDRAW REQUEST",
+    "updatedAt": "2026-05-24T16:04:43.286Z"
+  },
+  "00000001|0300|2026-04-30": {
+    "pernr": "00000001",
+    "leaveType": "0300",
+    "beginDate": "2026-04-30",
+    "status": "WITHDRAW REQUEST",
+    "updatedAt": "2026-06-02T11:38:54.259Z"
+  }
+}
