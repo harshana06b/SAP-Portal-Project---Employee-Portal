@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Employee Portal - Deep Technical Review README
 
 This README is written for a deep code review, viva, architecture discussion, and senior developer interview. It explains the SAP Employee Portal source files in a reviewer-oriented way: what each file does, why it exists, why the main keywords/imports/design choices were used, what breaks if they are removed, and what questions a reviewer may ask.
@@ -1474,3 +1475,7 @@ In a senior review, I would explain this as a portal middleware architecture. Th
 SAP integration is centralized because OData v2 responses can arrive as `d`, `d.results`, binary `$value`, or error payloads. Dates can be `/Date(...)`, `yyyyMMdd`, ISO strings, or display strings. HR fields often have ABAP names like `Pernr`, `Awart`, `Begda`, `Endda`, `Kverb`, or custom Gateway names. The service layer normalizes those variations so UI components can work with stable models like `LeaveRecord`, `Profile`, and `PayslipRecord`.
 
 For maintainability, route definitions, controller logic, SAP integration, mail integration, frontend services, guards, components, and shared UI are separated by responsibility. For performance, Angular uses `OnPush`, signals, computed values, lazy-loaded routes, and shared HTTP calls. For security, secrets stay backend-side, JWT protects APIs, PDF responses disable caching, and mail sending is server-side. For production, I would strengthen per-user authorization, replace local JSON overlays with shared persistence, isolate SAP cookies per user/session, remove debug logs, restrict CORS, add rate limiting, and move secrets to a managed secret store.
+=======
+# SAP-Portal-Project---Employee-Portal
+The Employee Portal provides quick access to HR and Finance services, including organization and employee information, printable payslips, leave balance, and leave requests. The portal is developed using Angular, SAP PI/PO, and SAP to simplify HR-related transactions and services.
+>>>>>>> 5ca0c476269fef1277a64720c200734d702ba837
